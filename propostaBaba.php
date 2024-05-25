@@ -1,8 +1,5 @@
 <?php
-session_start(); // Inicia a sessão
-
 require 'C:\xampp\htdocs\baba-baby2\conn.php';
-
 // Verifica se o usuário está logado
 if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
     $_SESSION['msgErro'] = "Necessário realizar o login para acessar a página!";
@@ -10,7 +7,6 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +15,6 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
     <!-- Favicon -->
     <link rel="shortcut icon" type="imagex/png" href="imgIndex">
     <!-- Estilo customizado -->
-    <link rel="stylesheet" href="menuBaba.css">
     <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <!-- modal -->
@@ -99,7 +94,7 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
                                     <tr data-proposta-id="<?= $proposta['idProposta'] ?>">
                                         <td class='list-body-content'><?= $proposta['nomeSolicitante'] ?></td>
                                         <td class='list-body-content'><?= $dataFormatada ?></td>
-                                        <td class='list-body-content'><button type='button' class="open-modal btn-visualizar">Visualizar</button></td>
+                                        <td class='list-body-content'><button type='button' class="open-modal botao-visualizar">Visualizar</button></td>
                                     </tr>
 
                                     <!-- Modal de Detalhes da Proposta -->
@@ -165,9 +160,6 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
             const closeModalButtons = document.querySelectorAll(".close-modal");
             const fades = document.querySelectorAll(".fade");
             const modals = document.querySelectorAll(".modal");
-            const aceitaButtons = document.querySelectorAll(".btn-aceita");
-            const recusaButtons = document.querySelectorAll(".btn-recusa");
-            const enviarRecusaButtons = document.querySelectorAll(".btn-enviar-recusa");
 
             openModalButtons.forEach((button, index) => {
                 button.addEventListener("click", () => {
@@ -187,56 +179,6 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
                 fade.addEventListener("click", () => {
                     modals[index].classList.add("hide");
                     fade.classList.add("hide");
-                });
-            });
-
-            aceitaButtons.forEach((button) => {
-                button.addEventListener("click", function() {
-                    const propostaId = this.getAttribute("data-proposta-id");
-                    const estado = this.getAttribute("data-valor");
-                    $.ajax({
-                        url: 'update_proposal.php',
-                        type: 'POST',
-                        data: { propostaId: propostaId, estado: estado },
-                        success: function(response) {
-                            const res = JSON.parse(response);
-                            if (res.status === 'success') {
-                                $(`tr[data-proposta-id="${propostaId}"]`).hide();
-                            } else {
-                                alert(res.message);
-                            }
-                        }
-                    });
-                });
-            });
-
-            recusaButtons.forEach((button) => {
-                button.addEventListener("click", function() {
-                    const modalBody = this.closest('.modal-body');
-                    const modalRecusa = modalBody.nextElementSibling;
-                    modalBody.classList.add("hide");
-                    modalRecusa.classList.remove("hide");
-                });
-            });
-
-            enviarRecusaButtons.forEach((button) => {
-                button.addEventListener("click", function() {
-                    const idProposta = this.getAttribute("data-proposta-id");
-                    const estado = 0;
-                    const motivo = this.previousElementSibling.value;
-                    $.ajax({
-                        url: 'propostasBabaBack.php',
-                        type: 'POST',
-                        data: { idProposta: propostaId, estado: estado, motivo: motivo },
-                        success: function(response) {
-                            const res = JSON.parse(response);
-                            if (res.status === 'success') {
-                                $(`tr[data-proposta-id="${propostaId}"]`).hide();
-                            } else {
-                                alert(res.message);
-                            }
-                        }
-                    });
                 });
             });
         });
