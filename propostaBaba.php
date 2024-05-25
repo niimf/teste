@@ -1,5 +1,6 @@
 <?php
 require 'C:\xampp\htdocs\baba-baby2\conn.php';
+session_start(); // Inicia a sessão
 // Verifica se o usuário está logado
 if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
     $_SESSION['msgErro'] = "Necessário realizar o login para acessar a página!";
@@ -7,6 +8,7 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
     exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -156,6 +158,66 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            const aceitaButtons = document.querySelectorAll(".btn-aceita");
+            const recusaButtons = document.querySelectorAll(".btn-recusa");
+            const enviarRecusaButtons = document.querySelectorAll(".btn-enviar-recusa");
+
+            aceitaButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const propostaId = button.getAttribute("data-proposta-id");
+                    console.log("Aceitar proposta ID: " + propostaId);
+                    $.ajax({
+                        url: 'atualizar_proposta.php',
+                        type: 'POST',
+                        data: { idProposta: propostaId, estado: 1 },
+                        success: function(response) {
+                            response = JSON.parse(response);
+                            console.log(response);
+                            if (response.success) {
+                                location.reload();
+                            } else {
+                                alert("Erro ao aceitar a proposta: " + response.message);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert("Erro ao aceitar a proposta: " + textStatus + " - " + errorThrown);
+                        }
+                    });
+                });
+            });
+
+            recusaButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const modal = button.closest(".modal");
+                    modal.querySelector(".modal-recusa").classList.remove("hide");
+                });
+            });
+
+            enviarRecusaButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const propostaId = button.getAttribute("data-proposta-id");
+                    const motivo = button.previousElementSibling.value;
+                    console.log("Recusar proposta ID: " + propostaId + " com motivo: " + motivo);
+                    $.ajax({
+                        url: 'atualizar_proposta.php',
+                        type: 'POST',
+                        data: { idProposta: propostaId, estado: 0, motivoRecusa: motivo },
+                        success: function(response) {
+                            response = JSON.parse(response);
+                            console.log(response);
+                            if (response.success) {
+                                location.reload();
+                            } else {
+                                alert("Erro ao recusar a proposta: " + response.message);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert("Erro ao recusar a proposta: " + textStatus + " - " + errorThrown);
+                        }
+                    });
+                });
+            });
+
             const openModalButtons = document.querySelectorAll(".open-modal");
             const closeModalButtons = document.querySelectorAll(".close-modal");
             const fades = document.querySelectorAll(".fade");
