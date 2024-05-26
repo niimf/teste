@@ -1,6 +1,6 @@
 <?php
 require 'C:\xampp\htdocs\baba-baby2\conn.php';
-session_start(); // Inicia a sessão
+
 // Verifica se o usuário está logado
 if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
     $_SESSION['msgErro'] = "Necessário realizar o login para acessar a página!";
@@ -20,7 +20,7 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
     <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <!-- modal -->
-    <link rel="stylesheet" href="propostasBaba.css">
+    <link rel="stylesheet" href="propostas.css">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -77,11 +77,11 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
                             $idBaba = $result['idBaba'];
 
                             // Passo 2: Obter as propostas para esse idBaba e incluir o nome do solicitante
-                            $sql_proposta = $pdo->prepare("SELECT p.idProposta, p.fk_idBaba, p.fk_Ppk_idUsuario, p.data, p.turno, u.nome AS nomeSolicitante, pa.descricao, u.telefone, u.email
+                            $sql_proposta = $pdo->prepare("SELECT p.idProposta, p.fk_idBaba, p.fk_Ppk_idUsuario, p.data, p.turno, u.nome AS nomeSolicitante, pa.descricao, u.telefone, u.email, p.estado
                                 FROM proposta p
                                 LEFT JOIN pais pa ON p.fk_Ppk_idUsuario = pa.pk_idUsuario
                                 LEFT JOIN usuario u ON pa.pk_idUsuario = u.idUsuario
-                                WHERE p.fk_idBaba = :idBaba
+                                WHERE p.fk_idBaba = :idBaba AND p.estado IS NULL
                             ");
                             $sql_proposta->bindParam(':idBaba', $idBaba, PDO::PARAM_INT);
                             $sql_proposta->execute();
@@ -163,18 +163,16 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
             const enviarRecusaButtons = document.querySelectorAll(".btn-enviar-recusa");
 
             aceitaButtons.forEach(button => {
-                button.addEventListener("click", () => {
-                    const propostaId = button.getAttribute("data-proposta-id");
-                    console.log("Aceitar proposta ID: " + propostaId);
+                button.addEventListener("click", function() {
+                    const propostaId = this.getAttribute("data-proposta-id");
                     $.ajax({
                         url: 'atualizar_proposta.php',
                         type: 'POST',
                         data: { idProposta: propostaId, estado: 1 },
                         success: function(response) {
                             response = JSON.parse(response);
-                            console.log(response);
                             if (response.success) {
-                                location.reload();
+                                document.querySelector(`tr[data-proposta-id="${propostaId}"]`).style.display = 'none';
                             } else {
                                 alert("Erro ao aceitar a proposta: " + response.message);
                             }
@@ -187,26 +185,26 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
             });
 
             recusaButtons.forEach(button => {
-                button.addEventListener("click", () => {
-                    const modal = button.closest(".modal");
-                    modal.querySelector(".modal-recusa").classList.remove("hide");
+                button.addEventListener("click", function() {
+                    const modalBody = this.closest(".modal-body");
+                    const modalRecusa = modalBody.nextElementSibling;
+                    modalBody.classList.add("hide");
+                    modalRecusa.classList.remove("hide");
                 });
             });
 
             enviarRecusaButtons.forEach(button => {
-                button.addEventListener("click", () => {
-                    const propostaId = button.getAttribute("data-proposta-id");
-                    const motivo = button.previousElementSibling.value;
-                    console.log("Recusar proposta ID: " + propostaId + " com motivo: " + motivo);
+                button.addEventListener("click", function() {
+                    const propostaId = this.getAttribute("data-proposta-id");
+                    const motivo = this.previousElementSibling.value;
                     $.ajax({
                         url: 'atualizar_proposta.php',
                         type: 'POST',
                         data: { idProposta: propostaId, estado: 0, motivoRecusa: motivo },
                         success: function(response) {
                             response = JSON.parse(response);
-                            console.log(response);
                             if (response.success) {
-                                location.reload();
+                                document.querySelector(`tr[data-proposta-id="${propostaId}"]`).style.display = 'none';
                             } else {
                                 alert("Erro ao recusar a proposta: " + response.message);
                             }
@@ -244,6 +242,7 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
                 });
             });
         });
+
     </script>
 </body>
 </html>
