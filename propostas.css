@@ -189,6 +189,7 @@ body {
     overflow: hidden;
 }
 
+
 .top-list .title-content {
     float: left;
     color: #000000;
@@ -321,6 +322,11 @@ body {
     border-top: 1px solid #ccc; /* Adiciona uma borda superior */
 }
 
+.data-aceite {
+    margin-top: 10px;
+    border-top: 1px solid #ccc; /* Adiciona uma borda superior */
+}
+
 .modal-body button {
     width: 100px;
     height: 30px;
@@ -343,3 +349,4 @@ body {
     margin-bottom: 15px;
     text-align: center;
 }
+
