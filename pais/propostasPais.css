@@ -1,61 +1,368 @@
-<?php
-session_start(); // Inicia a sessão
-
-require 'C:\xampp\htdocs\baba-baby2\conn.php';
-
-// Verifica se o usuário está logado
-if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
-    $_SESSION['msgErro'] = "Necessário realizar o login para acessar a página!";
-    header("Location: index.php");
-    exit();
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-$data = filter_input(INPUT_POST, 'dateInput');
-$turno = filter_input(INPUT_POST, 'turno');
-$idBaba = filter_input(INPUT_POST, 'idBaba');
-$pk_idUsuarioB = filter_input(INPUT_POST, 'pk_idUsuario');
-$idUsuario = $_SESSION['idUsuario']; // Usuário logado
+body {
+    background-color: #ffffff;
+}
 
-try {
-    // Passo 1: Inserir a nova proposta na tabela 'Proposta'
-    $sql_proposta = $pdo->prepare("INSERT INTO Proposta (fk_idBaba, fk_Bpk_idUsuario, fk_Ppk_idUsuario, data, turno) VALUES (:fk_idBaba, :fk_Bpk_idUsuario, :fk_Ppk_idUsuario, :data, :turno)");
-    $sql_proposta->bindParam(':fk_idBaba', $idBaba, PDO::PARAM_INT);
-    $sql_proposta->bindParam(':fk_Bpk_idUsuario', $pk_idUsuarioB, PDO::PARAM_INT);
-    $sql_proposta->bindParam(':fk_Ppk_idUsuario', $idUsuario, PDO::PARAM_INT);
-    $sql_proposta->bindParam(':data', $data, PDO::PARAM_STR);
-    $sql_proposta->bindParam(':turno', $turno, PDO::PARAM_STR);
+/*inicio navbar */ 
+.navbar {
+    background-color: #EFCFAA;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Alinha os itens verticalmente ao centro */
+    position: sticky;
+    box-shadow: 0px 1px 4px 1px rgba(150, 150, 150);
+    padding: 5px 15px;
+    top: 0;
+    z-index: 1;
+}
 
-    if ($sql_proposta->execute()) {
-        // Obtém o ID da proposta recém-inserida
-        $idProposta = $pdo->lastInsertId();
+.navbar-ola {
+    color: #8a2cdcd7;
+    font-weight: 400;
+    font-size: medium;
+}
 
-        // Passo 2: Obter o idPais correspondente ao usuário logado
-        $sql_idPais = $pdo->prepare("SELECT idPais FROM pais WHERE pk_idUsuario = :idUsuario");
-        $sql_idPais->bindValue(':idUsuario', $idUsuario, PDO::PARAM_INT);
-        $sql_idPais->execute();
-        $result = $sql_idPais->fetch(PDO::FETCH_ASSOC);
+.navbar .navbar-content {
+    display: flex;
+    align-items: center;
+}
 
-        if ($result) {
-            $idPais = $result['idPais'];
+.navbar .bars {
+    margin-right: 25px;
+    align-items: center;
+    cursor: pointer;
+} 
 
-            // Passo 3: Atualizar a proposta recém-inserida com fk_idPais
-            $sql_atualizar_proposta = $pdo->prepare("UPDATE Proposta SET fk_idPais = :fk_idPais WHERE idProposta = :idProposta");
-            $sql_atualizar_proposta->bindParam(':fk_idPais', $idPais, PDO::PARAM_INT);
-            $sql_atualizar_proposta->bindParam(':idProposta', $idProposta, PDO::PARAM_INT);
-            $sql_atualizar_proposta->execute();
+.logo-img {
+    width: 120px;
+}
 
-            $_SESSION['mensagem'] = "Proposta criada e atualizada com sucesso!";
-        } else {
-            $_SESSION['mensagem'] = "Erro ao encontrar o idPais correspondente.";
-        }
-    } else {
-        $_SESSION['mensagem'] = "Erro ao inserir a proposta.";
+/*fim navbar*/
+
+.content {
+    display: flex;
+}
+
+/*inicio conteudo sidebar*/
+.content .sidebar {
+    background-color: #d9d9d9;
+    height: calc(100vh - 60px);
+    width: 60px;
+    position: sticky;
+    top: 60px;
+    overflow: auto;
+    box-shadow: 0 1px 4ps 1px black;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: 0.3s width ease-in-out;
+    flex-shrink: 0;
+}
+
+@media(max-width: 768px) {
+    .content .sidebar {
+        width: 60px;
+        position: fixed;
+        z-index: 1;
+        width: 0;
     }
-} catch (PDOException $e) {
-    $_SESSION['mensagem'] = "Erro ao processar dados: " . $e->getMessage();
 }
 
-// Redireciona de volta para menuPais.php
-header("Location: ../menuPais.php");
-exit();
-?>
+.content .sidebar:hover,
+.content.sidebar.active {
+    width: 250px;
+}
+
+.sidebar .sidebar-nav {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    position: relative;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
+
+.sidebar a {
+    color: rgb(0, 0, 0);
+}
+
+.sidebar a:hover {
+    color: #000000;
+    background-color: #cacaca;
+}
+
+.sidebar .sidebar-nav.active {
+    background-color: #cacaca;
+    color: #696969;
+}
+
+.sidebar .sidebar-nav.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background-color: #EFCFAA;
+}
+
+.sidebar-nav .icon {
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.content .wrapper {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+} 
+
+.content .row {
+    background-color: #cdcdcd;
+    border-radius: 6px;
+}
+
+.wrapper .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    flex-wrap: wrap;
+}
+
+/*inicio dash*/
+.row .box {
+    text-decoration: none;
+    width: 30%;
+    margin: 5px 1%;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #ffffff;
+    border-radius: 5px;
+    overflow: hidden;
+    flex-direction: column;
+    box-shadow: 0px 1px 4px 1px rgba(150, 150, 150);
+}
+
+.row .box-first {
+    background-color: rgb(82, 195, 82);
+}
+
+.row .box-third {
+    background-color: #cf5757;
+}
+
+.box span {
+    margin: 5px 0;
+    font-size: 17px;
+    position: relative;
+}
+
+@media (max-width: 1024px) {
+    .row .box {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .row .box {
+        width: 98%;
+    }
+}
+
+/*inicio tabela*/
+.row .top-list {
+    width: 100%;
+    overflow: hidden;
+}
+
+
+.top-list .title-content {
+    float: left;
+    color: #000000;
+    padding: 10px 16px;
+    font-size: 17px;
+}
+
+.top-list .top-list-right {
+    padding: 10px 5px 5px 0;
+    float: right;
+    
+}
+
+.table-list {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.table-list .list-head .list-head-content {
+    background-color: #EFCFAA;
+    padding: 10px;
+}
+
+.table-list .list-body .list-body-content {
+    background-color: #ffffff;
+    padding: 8px;
+}
+
+/*fim historico*/
+
+/*fim dash*/
+
+/*botoes*/
+.botao-visualizar {
+    background-color: #38db40;
+    color: #ffffff;
+    padding: 8px 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all .3s ease;
+}
+
+.botao-visualizar:hover {
+    background-color: #0e761e;
+    color: #ffffff;
+}
+
+.botao-finalizar {
+    background-color: #38db40;
+    color: #ffffff;
+    padding: 8px 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all .3s ease;
+}
+
+.botao-finalizar:hover {
+    background-color: #760e0e;
+    color: #ffffff;
+}
+
+/*row proposta baba*/
+.hidden-row {
+    background-color: #EFCFAA;
+}
+
+/* Classe para esconder elementos */
+.hide {
+    display: none;
+}
+
+/* Fade e modal com transição */
+.fade, .modal {
+    transition: 0.5s;
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Background do fade */
+.fade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Modal centralizado */
+.modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background-color: #fff;
+    width: 1000px;
+    max-width: 90%;
+    padding: 1.2rem;
+    border-radius: 0.5rem;
+}
+
+/* Cabeçalho do modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* Estilo dos títulos */
+.modal-header ul {
+    list-style: none;
+}
+
+.modal-body .contact ul {
+    list-style: none;
+    padding-left: 0; /* Remove o padding padrão */
+    margin: 0; /* Remove a margem padrão */
+}
+
+.modal-header ul .nome {
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.modal-header button {
+    width: 30px;
+    height: 29px;
+    background: #cacaca;
+    color: #000;
+    font-size: medium;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.contact {
+    margin-top: 10px;
+    border-top: 1px solid #ccc; /* Adiciona uma borda superior */
+}
+
+.data-aceite {
+    margin-top: 10px;
+    border-top: 1px solid #ccc; /* Adiciona uma borda superior */
+}
+
+.modal-body button {
+    width: 100px;
+    height: 30px;
+    background: #cacaca;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.modal-body button:hover {
+    background-color: #9b9b9b;
+    transition: 0.3s ease;
+}
+
+.alert {
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
