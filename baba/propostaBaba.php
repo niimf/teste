@@ -91,7 +91,7 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
 
                                     <!-- Modal de Detalhes da Proposta -->
                                     <div class="fade hide"></div>
-                                    <div class="modal hide">
+                                    <div class="modal hide" id="modal-<?= $proposta['idProposta'] ?>">
                                         <div class="modal-header">
                                             <ul>
                                                 <li class="nome">Solicitante: <?=$proposta['nomeSolicitante']?></li>
@@ -100,26 +100,28 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
                                             </ul>
                                             <button class="close-modal">x</button>
                                         </div>
-                                        <div class="modal-body"> 
+                                        <div class="modal-body">
                                             <div class="about">
                                                 <h3>Sobre a família:</h3>
-                                                <p><?=$proposta['descricao']?></p><br>
+                                                <p><?= htmlspecialchars($proposta['descricao']) ?></p><br>
                                             </div>
                                             <div class="contact">
                                                 <br>
                                                 <h3>Contato:</h3>
-                                                <p>Telefone: <?=$proposta['telefone']?></p>
-                                                <p>Email: <?=$proposta['email']?></p>   
+                                                <p>Telefone: <?= htmlspecialchars($proposta['telefone']) ?></p>
+                                                <p>Email: <?= htmlspecialchars($proposta['email']) ?></p>
                                                 <br>
                                             </div>
-                                            <button type="button" class="close-modal btn-aceita" data-valor="1" data-proposta-id="<?= $proposta['idProposta'] ?>">Aceitar</button> 
+                                            <button type="button" class="btn-aceita" data-valor="1" data-proposta-id="<?= $proposta['idProposta'] ?>">Aceitar</button>
                                             <button type="button" class="btn-recusa" data-valor="0" data-proposta-id="<?= $proposta['idProposta'] ?>">Recusar</button>
                                         </div>
+
                                         <div class="modal-recusa hide">
                                             <h3>Motivo da Recusa</h3>
-                                            <form>
-                                                <textarea name="motivo" rows="4" cols="50" placeholder="Digite o motivo da recusa"></textarea><br>
-                                                <button type="button" class="close-modal btn-enviar-recusa" data-proposta-id="<?= $proposta['idProposta'] ?>">Enviar</button>
+                                            <form id="form-recusa">
+                                                <textarea name="motivo" rows="4" cols="50" placeholder=" Digite o motivo da recusa" id="motivo-recusa-<?= $proposta['idProposta'] ?>"></textarea><br>
+                                                <input type="hidden" name="idProposta" value="<?= $proposta['idProposta'] ?>">
+                                                <button type="button" class="btn-enviar-recusa" data-proposta-id="<?= $proposta['idProposta'] ?>">Enviar</button>
                                             </form>
                                         </div>
                                     </div>
@@ -140,5 +142,6 @@ if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['nome'])) {
             </div>
         </div>
     </div>
+
 </body>
 </html>
