@@ -27,6 +27,9 @@ if ((!isset($_SESSION['idUsuario'])) AND (!isset($_SESSION['nome']))) {
                 </div>
                 <img src="../imgIndex/Babababypng.png" alt="Logo BabáBaby" class="logo-img">
             </div>
+            <div class="navbar-ola">
+                <p>Olá, <?php echo $_SESSION['nome']; ?></p>
+            </div>
         </nav>
         <!-- Fim Navbar -->
 
@@ -48,7 +51,7 @@ if ((!isset($_SESSION['idUsuario'])) AND (!isset($_SESSION['nome']))) {
             <div class="wrapper">
             <div class="row">
                 <div class="top-list">
-                    <span class="title-content">Serviços</span>
+                    <span class="title-content">Serviços ativos</span>
                 </div>
                 <table class="table-list">
                     <thead class="list-head">
