@@ -6,16 +6,17 @@ document.addEventListener("DOMContentLoaded", function() {
     aceitaButtons.forEach(button => {
         button.addEventListener("click", function() {
             const propostaId = this.getAttribute("data-proposta-id");
+            const dataAceite = new Date().toISOString().slice(0, 19).replace('T', ' ');  // Data no formato YYYY-MM-DD HH:MM:SS
             $.ajax({
                 url: 'atualizar_proposta.php',
                 type: 'POST',
-                data: { idProposta: propostaId, estado: 1 },
+                data: { idProposta: propostaId, estado: 1, dataAceite: dataAceite },
                 success: function(response) {
-                    if (response.success) {
+                    if (response.trim() === "success") {
                         alert("Proposta aceita com sucesso");
                         location.reload();
                     } else {
-                        alert("Erro ao aceitar a proposta: " + response.message);
+                        alert("Erro ao aceitar a proposta: " + response);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -39,17 +40,18 @@ document.addEventListener("DOMContentLoaded", function() {
     enviarRecusaButtons.forEach(button => {
         button.addEventListener("click", function() {
             const propostaId = this.getAttribute("data-proposta-id");
-            const motivo = this.previousElementSibling.value;
+            const motivo = this.closest('.modal-recusa').querySelector('textarea').value;
+            const dataRecusa = new Date().toISOString().slice(0, 19).replace('T', ' ');  // Data no formato YYYY-MM-DD HH:MM:SS
             $.ajax({
                 url: 'atualizar_proposta.php',
                 type: 'POST',
-                data: { idProposta: propostaId, estado: 0, motivoRecusa: motivo },
+                data: { idProposta: propostaId, estado: 0, motivoRecusa: motivo, dataRecusa: dataRecusa },
                 success: function(response) {
-                    if (response.success) {
+                    if (response.trim() === "success") {
                         alert("Proposta recusada com sucesso");
                         location.reload();
                     } else {
-                        alert("Erro ao recusar a proposta: " + response.message);
+                        alert("Erro ao recusar a proposta: " + response);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
