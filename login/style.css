@@ -1,0 +1,206 @@
+/* Define as configurações gerais do corpo do documento */
+body {
+    font-family: Arial, sans-serif; /* Define a família da fonte */
+    margin: 0; /* Remove as margens padrão */
+    padding: 0; /* Remove os preenchimentos padrão */
+    background-color: #ffffff; /* Define a cor de fundo do corpo */
+}
+
+/* Define o estilo da barra de navegação */
+.navbar {
+    display: flex; /* Define o tipo de exibição como flexível para permitir o alinhamento dos itens */
+    justify-content: flex-end; /* Alinha os itens à direita */
+    padding: 15px; /* Adiciona preenchimento à barra de navegação */
+    background-color: #EFCFAA; /* Define a cor de fundo da barra de navegação */
+}
+
+/* Define o estilo dos links na barra de navegação */
+.navbar a {
+    text-decoration: none; /* Remove a decoração de texto sublinhado */
+    margin-left: 20px; /* Adiciona um espaço entre os links */
+    color: #ffffff; /* Define a cor do texto dos links */
+}
+
+/* Define o estilo dos botões da barra de navegação */
+.nav-button {
+    text-decoration: none; /* Remove a decoração de texto sublinhado */
+    margin-left: 20px; /* Adiciona um espaço entre os botões */
+    color: rgb(255, 255, 255); /* Define a cor do texto dos botões */
+    background-color: #d894d4; /* Define a cor de fundo dos botões */
+    padding: 10px 20px; /* Adiciona preenchimento aos botões */
+    border-radius: 5px; /* Adiciona bordas arredondadas aos botões */
+    transition: background-color 0.3s ease; /* Adiciona uma transição suave na cor de fundo ao passar o mouse */
+}
+
+/* Define o estilo dos botões de navegação ao passar o mouse */
+.nav-button:hover {
+    background-color: #8f4278d8; /* Define a cor de fundo dos botões ao passar o mouse */
+}
+
+/* Define o estilo do contêiner principal que contém o carrossel e o logo */
+.content {
+    display: flex; /* Define o tipo de exibição como flexível para permitir o alinhamento dos itens */
+    justify-content: space-between; /* Distribui o espaço entre os elementos filhos */
+}
+
+/* Define o estilo do botão de entrada */
+.enter-button {
+    background-color: #d359cb; /* Define a cor de fundo do botão */
+    border: none; /* Remove a borda do botão */
+    padding: 20px 30px; /* Adiciona preenchimento ao botão */
+    border-radius: 25px; /* Adiciona bordas arredondadas ao botão */
+    cursor: pointer; /* Define o cursor como um ponteiro ao passar por cima */
+    color: white; /* Define a cor do texto do botão */
+    font-size: 18px; /* Define o tamanho da fonte do texto do botão */
+    position: absolute; /* Define a posição absoluta para permitir o posicionamento em qualquer lugar */
+    top: 90%; /* Posiciona o botão no meio da tela verticalmente */
+    left: 72%; /* Posiciona o botão a 70% da largura da tela, começando da esquerda */
+    transition: background-color 0.3s ease;
+}
+
+/* Define o estilo do botão de entrada ao passar o mouse */
+.enter-button:hover {
+    background-color: #76175ad8; /* Define a cor de fundo dos botões ao passar o mouse */
+    opacity: 1;
+}
+
+#fade, #modal{
+    transition: 0.5s;
+    opacity: 1;
+    pointer-events: all;
+}
+
+#fade{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#modal{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background-color: #fff;
+    width: 500px;
+    max-width: 90%;
+    padding: 1.2rem;
+    border-radius: 0.5rem;
+}
+
+#modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+}
+
+h1{
+    color: darksalmon;
+}
+
+form{
+    position:relative;
+    left:-1px;
+    top:8px;
+}
+
+form input{
+    padding: 10px 15px;
+    margin: 0px 20px;
+    width: calc(100% - 40px);
+    border-radius: 10px;
+    border: 1px solid #888;
+    margin-bottom: 20px;
+}
+
+.passw_area{
+    padding: 10px 15px;
+    margin: 0px 20px;
+    width: calc(100% - 40px);
+    border-radius: 10px;
+    border: 1px solid #888;
+    margin-bottom: 5px;
+}
+
+.btn_login{
+    background: darksalmon;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    position:relative;
+    left:161px;
+    top:-7px;
+}
+
+.msg_erro{
+    color: red;
+    display: none;
+    justify-content: center;
+    margin-bottom: 5px;
+    font-size: smaller;
+    font-weight: 700;
+}
+
+p{
+    font-size: smaller;
+    padding: 10px 15px;
+    margin: 0px 10px;
+    margin-bottom: 15px;
+    color: rgba(0, 0, 0, 0.573);
+}
+
+a{
+    text-decoration: none;
+    color: darksalmon;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: darksalmon;
+}
+
+#modal.hide,
+#fade.hide{
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Define o estilo da imagem do logo */
+.logo img {
+    width: 300px; /* Ajuste a largura conforme necessário */
+    height: 300px; /* Ajuste a altura conforme necessário */
+    display: flex; /* Isso fará com que a imagem seja exibida em sua própria linha */
+    margin: 0 auto; /* Isso centralizará a imagem */
+    position: relative; /* Define a posição da imagem do logo como relativa ao seu contêiner pai */
+    top: 140px; /* Ajuste a distância do topo conforme necessário */
+    left: -150px; /* Ajuste a distância da esquerda conforme necessário */
+}
+
+/* Define o estilo do carrossel */
+.carrossel {
+    position: relative; /* Define a posição relativa para o elemento */
+    width: 50%; /* Define a largura do carrossel como metade da largura do contêiner pai */
+    overflow: hidden; /* Esconde qualquer conteúdo que exceda os limites do carrossel */
+}
+
+/* Define o estilo dos slides do carrossel */
+.imagens-carrossel {
+    display: flex; /* Define a exibição dos slides como flexível */
+    width: 100%; /* Define a largura dos slides como 100% */
+    transition: transform 0.5s ease-in-out; /* Adiciona uma transição suave para o movimento dos slides */
+}
+
+/* Define o estilo das imagens dos slides */
+.imagens-carrossel img {
+    width: 100%; /* Define a largura das imagens dos slides como 100% */
+    height: 720px; /* Define a altura fixa para as imagens dos slides */
+    flex-shrink: 0; /* Impede que as imagens dos slides sejam reduzidas em relação ao tamanho do contêiner flexível */
+}
